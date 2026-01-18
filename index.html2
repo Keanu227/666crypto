@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>666Crypto Hub</title>
+</head>
+<body>
+  <h1>🔥 666Crypto Hub 🔥</h1>
+  <button id="downloadZip">Generate Download ZIP</button>
+
+  <script src="script.js"></script>
+</body>
+</html>
