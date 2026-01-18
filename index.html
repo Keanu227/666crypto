@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>666Crypto Hub</title>
+</head>
+<body>
+  <h1>🔥 666Crypto Hub 🔥</h1>
+  <p>Welcome Founder. Use your voice to command the system.</p>
+
+  <!-- Chat Assistant -->
+  <div>
+    <h2>🤖 AI Chat Assistant</h2>
+    <textarea id="userInput" placeholder="Ask the AI..."></textarea>
+    <button onclick="sendMessage()">Send</button>
+    <button onclick="startSpeech()">🎤 Speak</button>
+    <div id="response"></div>
+  </div>
+
+  <!-- App Builder -->
+  <div>
+    <h2>🛠️ AI App Builder</h2>
+    <textarea id="appPrompt" rows="6" placeholder="Describe your app..."></textarea>
+    <select id="stack">
+      <option value="vanilla">Vanilla HTML/CSS/JS</option>
+      <option value="react">React + Vite</option>
+      <option value="node-express">Node.js + Express</option>
+      <option value="fullstack-react-express">Fullstack: React + Express</option>
+    </select>
+    <input id="name" placeholder="my-app"/>
+    <button onclick="generateApp()">Generate</button>
+    <button onclick="downloadApp()">Download ZIP</button>
+    <pre id="preview"></pre>
+  </div>
+
+  <script>
+    const BACKEND = "https://666crypto.onrender.com"; // replace with your backend URL
+
+    // Chat
+    async function sendMessage() {
+      const input = document.getElementById("userInput").value;
+      const res = await fetch(`${BACKEND}/api/ai`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: input })
+      });
+      const data = await res.json();
+      document.getElementById("response").innerText = data.reply;
+    }
+
+    function startSpeech() {
+      const recognition = new webkitSpeechRecognition();
+      recognition.lang = "en-US";
+      recognition.onresult = async function(event) {
+        const transcript = event.results[0][0].transcript;
+        // Send transcript to backend for identity + command check
+        const res = await fetch(`${BACKEND}/api/voice-command`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ voice: transcript })
+        });
+        const data = await res.json();
+        document.getElementById("response").innerText = data.reply;
+      };
+      recognition.start();
+    }
+
+    // App Builder
+    async function generateApp() {
+      const prompt = document.getElementById("appPrompt").value;
+      const stack = document.getElementById("stack").value;
+      const name = document.getElementById("name").value || "my-app";
+      const res = await fetch(`${BACKEND}/api/apps/generate`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prompt, stack, name })
+      });
+      const data = await res.json();
+      document.getElementById("preview").innerText = JSON.stringify(data.previewFiles, null, 2);
+    }
+
+    async function downloadApp() {
+      const res = await fetch(`${BACKEND}/api/apps/download/latest`);
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "app-scaffold.zip";
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+  </script>
+</body>
+</html>
