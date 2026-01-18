@@ -8,7 +8,7 @@
 <body>
   <h1>🔥 666Crypto Hub 🔥</h1>
   <button id="downloadZip">Generate Download ZIP</button>
-
+  <!-- Chatbox + input + button --> <div id="chatbox"></div> <input id="userInput" type="text" placeholder="Type your message..."> <button onclick="talkBack()">Send</button> <!-- Script goes at the bottom --> <script> function talkBack() { const chatbox = document.getElementById("chatbox"); const input = document.getElementById("userInput").value; chatbox.innerHTML += `<div class="user">You: ${input}</div>`; let reply; if (/hello/i.test(input)) { reply = "Hello, Founder!"; } else if (/crypto/i.test(input)) { reply = "Crypto guides are ready for you."; } else { reply = "I hear you: " + input; } chatbox.innerHTML += `<div class="bot">Bot: ${reply}</div>`; document.getElementById("userInput").value = ""; chatbox.scrollTop = chatbox.scrollHeight;
   <script src="script.js"></script>
 </body>
 </html>
