@@ -1,108 +1,567 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>  
-  <meta charset="UTF-8">
-  <title>666Crypto Hub</title>
-</head>
- <title>666crypto</title> <style>/* styles here */body { font-family: Arial, sans-serif; background: #f5f5f5; } #chatbox { border: 1px solid #ccc; border-radius: 10px; padding: 10px; width: 300px; height: 400px; overflow-y: auto; background: #fff; margin-bottom: 10px; } .bubble { display: inline-block; padding: 8px 12px; border-radius: 15px; margin: 5px 0; max-width: 80%; word-wrap: break-word; } .user { background: #d1e7ff; align-self: flex-end; text-align: right; float: right; clear: both; } .bot { background: #e2ffe1; align-self: flex-start; text-align: left; float: left; clear: both; } #userInput { width: 220px; padding: 5px; } button { padding: 6px 10px; margin-left: 5px; } </style> </head> <body> <h1>Welcome to 666crypto</h1> <div id="chatbox"></div> <input id="userInput" type="text" placeholder="Type your message..."> <button onclick="talkBack()">Send</button> <script> function talkBack() { const chatbox = document.getElementById("chatbox"); const input = document.getElementById("userInput").value; // User bubble chatbox.innerHTML += `<div class="bubble user">You: ${input}</div>`; // Bot reply logic let reply; if (/hello/i.test(input)) { reply = "Hello, Founder!"; } else if (/crypto/i.test(input)) { reply = "Crypto guides are ready for you."; } else { reply = "I hear you: " + input; } // Bot bubble chatbox.innerHTML += `<div class="bubble bot">Bot: ${reply}</div>`; // Clear input + scroll down document.getElementById("userInput").value = ""; chatbox.scrollTop = chatbox.scrollHeight; }</style> </head> <body> <!-- chatbox, input, button here --> <script>/* talkBack() function here */ 
-<body>
-  <h1>🔥 666Crypto Hub 🔥</h1>
-  <button id="downloadZip">Generate Download ZIP</button>
-  <!-- Chatbox + input + button --> <div id="chatbox"></div> <input id="userInput" type="text" placeholder="Type your message..."> <button onclick="talkBack()">Send</button> <!-- Script goes at the bottom --> <script> function talkBack() { const chatbox = document.getElementById("chatbox"); const input = document.getElementById("userInput").value; chatbox.innerHTML += `<div class="user">You: ${input}</div>`; let reply; if (/hello/i.test(input)) { reply = "Hello, Founder!"; } else if (/crypto/i.test(input)) { reply = "Crypto guides are ready for you."; } else { reply = "I hear you: " + input; } chatbox.innerHTML += `<div class="bot">Bot: ${reply}</div>`; document.getElementById("userInput").value = ""; chatbox.scrollTop = chatbox.scrollHeight;
-  <script src="script.js"></script>
-</body>
-</html>
-
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>666Crypto Hub</title>
+  <meta charset="UTF-8" />
+  <title>666Crypto Hub — App Builder</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Privacy-first app builder for 666Crypto Hub. Offline, modular, exportable." />
+  <style>
+    :root {
+      --bg: #0b0f14;
+      --panel: #121821;
+      --accent: #e63946;
+      --accent-2: #ffd166;
+      --text: #e6edf3;
+      --muted: #9aa7b0;
+      --ok: #06d6a0;
+      --warn: #f4a261;
+      --border: #1f2a37;
+      --shadow: rgba(0,0,0,0.35);
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: Inter, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+    }
+    * { box-sizing: border-box }
+    html, body { height: 100% }
+    body {
+      margin: 0;
+      background: linear-gradient(180deg, #0b0f14 0%, #0d1218 100%);
+      color: var(--text);
+      font-family: var(--sans);
+    }
+    header {
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      gap: 12px;
+      align-items: center;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(18, 24, 33, 0.85);
+      backdrop-filter: blur(6px);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .brand {
+      display: flex; align-items: center; gap: 12px;
+    }
+    .logo {
+      width: 36px; height: 36px; border-radius: 8px;
+      background: radial-gradient(circle at 30% 30%, var(--accent), #8a1f2a 60%, #2b0f13 100%);
+      box-shadow: 0 6px 16px var(--shadow), inset 0 0 12px rgba(230,57,70,0.35);
+      border: 1px solid #3a0f14;
+    }
+    .title { font-weight: 700; letter-spacing: 0.2px }
+    .identity {
+      font-size: 12px; color: var(--muted);
+    }
+    .actions { display: flex; gap: 8px }
+    button, .btn {
+      background: #18202b; color: var(--text);
+      border: 1px solid var(--border);
+      padding: 8px 12px; border-radius: 8px; cursor: pointer;
+      transition: 0.2s ease;
+    }
+    button:hover { background: #1b2430 }
+    .btn-primary { background: var(--accent); border-color: #8a1f2a }
+    .btn-primary:hover { filter: brightness(1.05) }
+    .btn-ok { background: var(--ok); color: #0b0f14; border-color: #0b7a5e }
+    .btn-warn { background: var(--warn); color: #0b0f14; border-color: #8a5a2a }
+    .layout {
+      display: grid;
+      grid-template-columns: 280px 1fr 320px;
+      gap: 12px;
+      padding: 12px;
+      height: calc(100vh - 64px);
+    }
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      display: flex; flex-direction: column;
+      min-height: 0;
+    }
+    .panel h3 {
+      margin: 0; padding: 12px 14px;
+      border-bottom: 1px solid var(--border);
+      font-size: 14px; letter-spacing: 0.2px; color: var(--muted);
+    }
+    .panel-content { padding: 12px; overflow: auto }
+    .list { display: grid; gap: 8px }
+    .list-item {
+      background: #0f141b; border: 1px solid var(--border);
+      border-radius: 10px; padding: 10px; display: flex; justify-content: space-between; align-items: center;
+    }
+    .list-item .meta { font-size: 12px; color: var(--muted) }
+    .component {
+      background: #0f141b; border: 1px dashed #2a3646;
+      border-radius: 10px; padding: 10px; cursor: grab;
+    }
+    .canvas {
+      background: #0c1117; border: 1px solid var(--border);
+      border-radius: 12px; margin: 12px; padding: 12px;
+      overflow: auto; min-height: 240px;
+    }
+    .canvas .dropzone {
+      border: 2px dashed #2a3646; border-radius: 10px; padding: 12px; color: var(--muted);
+      text-align: center; margin: 8px 0;
+    }
+    .node {
+      border: 1px solid #2a3646; border-radius: 10px; padding: 10px; margin: 8px 0;
+      background: #0f141b; position: relative;
+    }
+    .node:hover { border-color: #3a4a5f }
+    .node .toolbar {
+      position: absolute; top: 8px; right: 8px; display: flex; gap: 6px;
+    }
+    .node .toolbar button { font-size: 12px; padding: 4px 6px }
+    .prop-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+    }
+    .prop-grid label { font-size: 12px; color: var(--muted) }
+    input[type="text"], input[type="number"], select, textarea {
+      width: 100%; background: #0f141b; color: var(--text);
+      border: 1px solid var(--border); border-radius: 8px; padding: 8px;
+      font-family: var(--sans);
+    }
+    textarea { min-height: 80px }
+    .footer {
+      padding: 10px 12px; border-top: 1px solid var(--border); font-size: 12px; color: var(--muted);
+    }
+    .code {
+      font-family: var(--mono); background: #0b0f14; border: 1px solid var(--border);
+      border-radius: 8px; padding: 8px; overflow: auto; white-space: pre; max-height: 180px;
+    }
+    .badge { font-size: 11px; padding: 2px 6px; border-radius: 6px; background: #18202b; border: 1px solid var(--border) }
+    .hidden { display: none }
+    .row { display: flex; gap: 8px; align-items: center }
+    .grow { flex: 1 }
+    .muted { color: var(--muted) }
+    .divider { height: 1px; background: var(--border); margin: 8px 0 }
+    .success { color: var(--ok) }
+    .warning { color: var(--warn) }
+  </style>
 </head>
 <body>
-  <h1>🔥 666Crypto Hub 🔥</h1>
-  <p>Welcome Founder. Use your voice to command the system.</p>
+  <header>
+    <div class="brand">
+      <div class="logo" aria-hidden="true"></div>
+      <div>
+        <div class="title">666Crypto Hub — App Builder</div>
+        <div class="identity">Founder: Keanu • Founder’s daughter: Kiana • Privacy-first, manual approval only</div>
+      </div>
+    </div>
+    <div class="actions">
+      <button id="newPageBtn" class="btn">New page</button>
+      <button id="saveBtn" class="btn-primary">Save project (local)</button>
+      <button id="exportBtn" class="btn-ok">Export static bundle</button>
+      <button id="importBtn" class="btn-warn">Import project</button>
+    </div>
+    <div class="row">
+      <span class="badge">Offline</span>
+      <span class="badge">No tracking</span>
+      <span class="badge">Manual-only</span>
+    </div>
+  </header>
 
-  <!-- Chat Assistant -->
-  <div>
-    <h2>🤖 AI Chat Assistant</h2>
-    <textarea id="userInput" placeholder="Ask the AI..."></textarea>
-    <button onclick="sendMessage()">Send</button>
-    <button onclick="startSpeech()">🎤 Speak</button>
-    <div id="response"></div>
-  </div>
+  <main class="layout">
+    <!-- Pages -->
+    <section class="panel" id="pagesPanel">
+      <h3>Pages</h3>
+      <div class="panel-content">
+        <div class="row">
+          <input id="pageNameInput" class="grow" type="text" placeholder="Page name (e.g., home)" />
+          <button id="addPageBtn">Add</button>
+        </div>
+        <div class="divider"></div>
+        <div id="pagesList" class="list"></div>
+      </div>
+      <div class="footer">Tip: Keep page names URL-safe (a-z, 0-9, hyphen).</div>
+    </section>
 
-  <!-- App Builder -->
-  <div>
-    <h2>🛠️ AI App Builder</h2>
-    <textarea id="appPrompt" rows="6" placeholder="Describe your app..."></textarea>
-    <select id="stack">
-      <option value="vanilla">Vanilla HTML/CSS/JS</option>
-      <option value="react">React + Vite</option>
-      <option value="node-express">Node.js + Express</option>
-      <option value="fullstack-react-express">Fullstack: React + Express</option>
-    </select>
-    <input id="name" placeholder="my-app"/>
-    <button onclick="generateApp()">Generate</button>
-    <button onclick="downloadApp()">Download ZIP</button>
-    <pre id="preview"></pre>
-  </div>
+    <!-- Canvas -->
+    <section class="panel" id="canvasPanel">
+      <h3>Canvas</h3>
+      <div class="panel-content">
+        <div class="row">
+          <div><span class="muted">Current page:</span> <strong id="currentPageLabel">—</strong></div>
+          <div class="grow"></div>
+          <button id="previewBtn">Preview</button>
+          <button id="clearPageBtn">Clear</button>
+        </div>
+        <div id="canvas" class="canvas" aria-label="Canvas">
+          <div class="dropzone">Drag components here</div>
+        </div>
+      </div>
+      <div class="footer">All changes are local until you export. Nothing is sent anywhere.</div>
+    </section>
+
+    <!-- Components & Properties -->
+    <section class="panel" id="componentsPanel">
+      <h3>Components</h3>
+      <div class="panel-content">
+        <div class="list" id="componentsList"></div>
+        <div class="divider"></div>
+        <h4 class="muted" style="margin:0 0 8px 0;">Selected node properties</h4>
+        <div id="propsForm"></div>
+        <div class="divider"></div>
+        <h4 class="muted" style="margin:0 0 8px 0;">Node JSON</h4>
+        <pre id="nodeJson" class="code">—</pre>
+      </div>
+      <div class="footer">Edit properties to customize content, layout, and styles.</div>
+    </section>
+  </main>
+
+  <!-- Preview modal -->
+  <dialog id="previewModal" style="border:none;border-radius:12px;max-width:900px;width:90%;padding:0;background:#0c1117;color:#e6edf3;">
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:12px;border-bottom:1px solid #1f2a37;">
+      <div>Live preview</div>
+      <button id="closePreview">Close</button>
+    </div>
+    <iframe id="previewFrame" style="width:100%;height:60vh;border:0;"></iframe>
+  </dialog>
 
   <script>
-    const BACKEND = "https://666crypto.onrender.com"; // replace with your backend URL
+    // ——————————————————————————————————————————————
+    // Founder identity & project state
+    // ——————————————————————————————————————————————
+    const Founder = { name: "Keanu", daughter: "Kiana", brand: "666Crypto Hub" };
 
-    // Chat
-    async function sendMessage() {
-      const input = document.getElementById("userInput").value;
-      const res = await fetch(`${BACKEND}/api/ai`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: input })
+    const defaultTheme = {
+      name: "dark",
+      colors: {
+        bg: "#0c1117",
+        text: "#e6edf3",
+        accent: "#e63946",
+        border: "#1f2a37"
+      },
+      font: "Inter, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif"
+    };
+
+    const componentsCatalog = [
+      {
+        type: "section",
+        label: "Section",
+        defaults: { padding: 16, background: "#0f141b", border: "#2a3646", radius: 12 }
+      },
+      {
+        type: "heading",
+        label: "Heading",
+        defaults: { level: 2, text: "Your heading", align: "left" }
+      },
+      {
+        type: "paragraph",
+        label: "Paragraph",
+        defaults: { text: "Write something meaningful here.", align: "left" }
+      },
+      {
+        type: "button",
+        label: "Button",
+        defaults: { text: "Click me", href: "#", variant: "primary" }
+      },
+      {
+        type: "card",
+        label: "Card",
+        defaults: { title: "Card title", body: "Card body text.", accent: "#ffd166" }
+      },
+      {
+        type: "image",
+        label: "Image",
+        defaults: { src: "", alt: "Image", width: 100, rounded: true }
+      },
+      {
+        type: "grid",
+        label: "Grid",
+        defaults: { columns: 2, gap: 12 }
+      },
+      {
+        type: "spacer",
+        label: "Spacer",
+        defaults: { size: 12 }
+      }
+    ];
+
+    const project = {
+      meta: {
+        name: "My App",
+        brand: Founder.brand,
+        founder: Founder.name,
+        foundersDaughter: Founder.daughter,
+        createdAt: new Date().toISOString(),
+        theme: defaultTheme
+      },
+      pages: {
+        home: []
+      },
+      currentPage: "home",
+      selectedNodeId: null
+    };
+
+    // ——————————————————————————————————————————————
+    // DOM helpers
+    // ——————————————————————————————————————————————
+    const el = (sel) => document.querySelector(sel);
+    const make = (tag, attrs = {}, children = []) => {
+      const node = document.createElement(tag);
+      Object.entries(attrs).forEach(([k, v]) => {
+        if (k === "class") node.className = v;
+        else if (k === "text") node.textContent = v;
+        else node.setAttribute(k, v);
       });
-      const data = await res.json();
-      document.getElementById("response").innerText = data.reply;
-    }
+      children.forEach(c => node.appendChild(c));
+      return node;
+    };
 
-    function startSpeech() {
-      const recognition = new webkitSpeechRecognition();
-      recognition.lang = "en-US";
-      recognition.onresult = async function(event) {
-        const transcript = event.results[0][0].transcript;
-        // Send transcript to backend for identity + command check
-        const res = await fetch(`${BACKEND}/api/voice-command`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ voice: transcript })
+    // ——————————————————————————————————————————————
+    // Pages UI
+    // ——————————————————————————————————————————————
+    function renderPagesList() {
+      const list = el("#pagesList");
+      list.innerHTML = "";
+      Object.keys(project.pages).forEach(name => {
+        const item = make("div", { class: "list-item" }, [
+          make("div", {}, [
+            make("div", { text: name }),
+            make("div", { class: "meta", text: `${project.pages[name].length} nodes` })
+          ]),
+          make("div", {}, [
+            make("button", { "data-page": name, class: "btn" }, [ document.createTextNode("Open") ]),
+            make("button", { "data-del": name, class: "btn" }, [ document.createTextNode("Delete") ])
+          ])
+        ]);
+        list.appendChild(item);
+      });
+
+      list.querySelectorAll("button[data-page]").forEach(btn => {
+        btn.addEventListener("click", () => {
+          project.currentPage = btn.getAttribute("data-page");
+          el("#currentPageLabel").textContent = project.currentPage;
+          renderCanvas();
         });
-        const data = await res.json();
-        document.getElementById("response").innerText = data.reply;
-      };
-      recognition.start();
-    }
-
-    // App Builder
-    async function generateApp() {
-      const prompt = document.getElementById("appPrompt").value;
-      const stack = document.getElementById("stack").value;
-      const name = document.getElementById("name").value || "my-app";
-      const res = await fetch(`${BACKEND}/api/apps/generate`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ prompt, stack, name })
       });
-      const data = await res.json();
-      document.getElementById("preview").innerText = JSON.stringify(data.previewFiles, null, 2);
+      list.querySelectorAll("button[data-del]").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const name = btn.getAttribute("data-del");
+          if (name === "home") { alert("Cannot delete the home page."); return; }
+          if (!confirm(`Delete page "${name}"? This cannot be undone.`)) return;
+          delete project.pages[name];
+          if (project.currentPage === name) project.currentPage = "home";
+          el("#currentPageLabel").textContent = project.currentPage;
+          renderPagesList();
+          renderCanvas();
+        });
+      });
+
+      el("#currentPageLabel").textContent = project.currentPage;
     }
 
-    async function downloadApp() {
-      const res = await fetch(`${BACKEND}/api/apps/download/latest`);
-      const blob = await res.blob();
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "app-scaffold.zip";
-      a.click();
-      URL.revokeObjectURL(url);
+    // ——————————————————————————————————————————————
+    // Components palette
+    // ——————————————————————————————————————————————
+    function renderComponentsList() {
+      const list = el("#componentsList");
+      list.innerHTML = "";
+      componentsCatalog.forEach(c => {
+        const item = make("div", { class: "component", draggable: "true" }, [
+          make("div", { text: c.label }),
+          make("div", { class: "meta", text: c.type })
+        ]);
+        item.addEventListener("dragstart", (e) => {
+          e.dataTransfer.setData("text/plain", c.type);
+        });
+        list.appendChild(item);
+      });
     }
-  </script>
-</body>
-</html>
+
+    // ——————————————————————————————————————————————
+    // Canvas & nodes
+    // ——————————————————————————————————————————————
+    function renderCanvas() {
+      const canvas = el("#canvas");
+      canvas.innerHTML = "";
+      const dz = make("div", { class: "dropzone", text: "Drag components here" });
+      canvas.appendChild(dz);
+
+      canvas.addEventListener("dragover", (e) => e.preventDefault());
+      canvas.addEventListener("drop", (e) => {
+        e.preventDefault();
+        const type = e.dataTransfer.getData("text/plain");
+        addNode(type);
+      });
+
+      project.pages[project.currentPage].forEach(node => {
+        canvas.appendChild(renderNode(node));
+      });
+    }
+
+    function addNode(type) {
+      const def = componentsCatalog.find(c => c.type === type);
+      if (!def) return;
+      const id = "n_" + Math.random().toString(36).slice(2, 9);
+      const node = { id, type, props: JSON.parse(JSON.stringify(def.defaults)), children: [] };
+      project.pages[project.currentPage].push(node);
+      renderCanvas();
+    }
+
+    function renderNode(node) {
+      const wrap = make("div", { class: "node", "data-id": node.id }, []);
+      const toolbar = make("div", { class: "toolbar" }, [
+        make("button", { "data-edit": node.id }, [ document.createTextNode("Edit") ]),
+        make("button", { "data-up": node.id }, [ document.createTextNode("Up") ]),
+        make("button", { "data-down": node.id }, [ document.createTextNode("Down") ]),
+        make("button", { "data-del": node.id }, [ document.createTextNode("Delete") ])
+      ]);
+      wrap.appendChild(toolbar);
+
+      // Render preview of node
+      wrap.appendChild(renderNodePreview(node));
+
+      // Toolbar actions
+      toolbar.querySelector("[data-edit]").addEventListener("click", () => selectNode(node.id));
+      toolbar.querySelector("[data-up]").addEventListener("click", () => moveNode(node.id, -1));
+      toolbar.querySelector("[data-down]").addEventListener("click", () => moveNode(node.id, +1));
+      toolbar.querySelector("[data-del]").addEventListener("click", () => deleteNode(node.id));
+
+      return wrap;
+    }
+
+    function renderNodePreview(node) {
+      const p = node.props;
+      switch (node.type) {
+        case "section": {
+          const s = make("div", { style: `
+            padding:${p.padding}px;
+            background:${p.background};
+            border:1px solid ${p.border};
+            border-radius:${p.radius}px;
+          `}, []);
+          s.appendChild(make("div", { class: "muted", text: "Section" }));
+          return s;
+        }
+        case "heading": {
+          const tag = "h" + Math.min(Math.max(p.level, 1), 6);
+          const h = make(tag, { style: `text-align:${p.align}` }, [ document.createTextNode(p.text) ]);
+          return h;
+        }
+        case "paragraph": {
+          const para = make("p", { style: `text-align:${p.align}` }, [ document.createTextNode(p.text) ]);
+          return para;
+        }
+        case "button": {
+          const b = make("a", { href: p.href || "#", class: "btn " + (p.variant === "primary" ? "btn-primary" : "") }, [ document.createTextNode(p.text) ]);
+          return b;
+        }
+        case "card": {
+          const c = make("div", { style: `
+            border:1px solid ${project.meta.theme.colors.border};
+            border-left:4px solid ${p.accent};
+            border-radius:10px; padding:10px; background:#0f141b;
+          `}, []);
+          c.appendChild(make("div", { style: "font-weight:700;margin-bottom:6px", text: p.title }));
+          c.appendChild(make("div", {}, [ document.createTextNode(p.body) ]));
+          return c;
+        }
+        case "image": {
+          const img = make("img", {
+            src: p.src || "",
+            alt: p.alt || "image",
+            style: `max-width:${p.width}%; border-radius:${p.rounded ? 10 : 0}px; border:1px solid ${project.meta.theme.colors.border}`
+          }, []);
+          return img;
+        }
+        case "grid": {
+          const g = make("div", { style: `
+            display:grid; grid-template-columns: repeat(${p.columns}, 1fr); gap:${p.gap}px;
+            border:1px dashed #2a3646; border-radius:10px; padding:10px;
+          `}, []);
+          g.appendChild(make("div", { class: "muted", text: "Grid (add children by dropping components after selecting this node)" }));
+          return g;
+        }
+        case "spacer": {
+          return make("div", { style: `height:${p.size}px` }, []);
+        }
+        default:
+          return make("div", { class: "muted", text: `Unknown: ${node.type}` });
+      }
+    }
+
+    function selectNode(id) {
+      project.selectedNodeId = id;
+      const node = getNodeById(id);
+      renderPropsForm(node);
+      el("#nodeJson").textContent = JSON.stringify(node, null, 2);
+    }
+
+    function getNodeById(id) {
+      return project.pages[project.currentPage].find(n => n.id === id);
+    }
+
+    function moveNode(id, delta) {
+      const arr = project.pages[project.currentPage];
+      const idx = arr.findIndex(n => n.id === id);
+      if (idx < 0) return;
+      const newIdx = idx + delta;
+      if (newIdx < 0 || newIdx >= arr.length) return;
+      const [n] = arr.splice(idx, 1);
+      arr.splice(newIdx, 0, n);
+      renderCanvas();
+    }
+
+    function deleteNode(id) {
+      const arr = project.pages[project.currentPage];
+      const idx = arr.findIndex(n => n.id === id);
+      if (idx < 0) return;
+      if (!confirm("Delete this node?")) return;
+      arr.splice(idx, 1);
+      if (project.selectedNodeId === id) {
+        project.selectedNodeId = null;
+        el("#propsForm").innerHTML = "";
+        el("#nodeJson").textContent = "—";
+      }
+      renderCanvas();
+    }
+
+    // ——————————————————————————————————————————————
+    // Properties form
+    // ——————————————————————————————————————————————
+    function renderPropsForm(node) {
+      const form = el("#propsForm");
+      form.innerHTML = "";
+      if (!node) { form.textContent = "No node selected."; return; }
+
+      const fields = Object.keys(node.props);
+      const grid = make("div", { class: "prop-grid" }, []);
+      fields.forEach(key => {
+        const label = make("label", { text: key });
+        let input;
+        const val = node.props[key];
+
+        if (typeof val === "number") {
+          input = make("input", { type: "number", value: val });
+        } else if (typeof val === "boolean") {
+          input = make("select", {}, [
+            make("option", { value: "true", text: "true" }),
+            make("option", { value: "false", text: "false" })
+          ]);
+          input.value = val ? "true" : "false";
+        } else if (key === "align") {
+          input = make("select", {}, [
+            make("option", { value: "left", text: "left" }),
+            make("option", { value: "center", text: "center" }),
+            make("option", { value: "right", text: "right" })
+          ]);
+          input.value = val;
+        } else if (key === "variant") {
+          input = make("select", {}, [
+            make("option", { value: "default", text: "default" }),
+            make("option", { value: "primary", text: "primary" })
+          ]);
+          input.value = val;
+        } else if (typeof val === "string" && val.length > 40) {
+          input = make("textarea", { }, []);
+          input.value = val;
+        } else {
+          input = make("input", { type: "text", value: val });
+        }
+
+        input.add
